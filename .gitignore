@@ -1,0 +1,142 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.venv
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-workspace
+*.sublime-project
+
+# Temporary files
+.tmp/
+tmp/
+*.temp
+*.bak
+*.log
+logs/
+
+# Cache
+__pycache__/
+.cache/
+.pytest_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Generated outputs
+output/
+outputs/
+generated/
+videos/
+generated_videos/
+*.mp4
+*.avi
+*.webm
+*.mov
+
+# Model files (too large)
+models/
+checkpoints/
+*.safetensors
+*.ckpt
+*.pth
+*.pt
+weights/
+
+# ComfyUI artifacts
+ComfyUI/
+comfyui_outputs/
+*.png.png
+
+# Hugging Face cache
+.cache/
+huggingface/
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor backup files
+*~
+*.swp
+*.swo
+*#
+
+# Node modules (if using any JS)
+node_modules/
+npm-debug.log
+
+# Test coverage
+htmlcov/
+.coverage
+.coverage.*
+.tox/
+.hypothesis/
+
+# Jupyter
+.ipynb_checkpoints
+*.ipynb
+
+# Documentation
+site/
+docs/_build/
+
+# Local development
+local.py
+settings_local.py
+.env.development
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Temporary upload directories
+uploads/
+temp_uploads/
+temp_images/
