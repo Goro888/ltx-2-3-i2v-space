@@ -1,0 +1,94 @@
+version: '3.8'
+
+services:
+  # ComfyUI Backend Service
+  comfyui:
+    image: comfyui:latest
+    container_name: ltx-comfyui
+    restart: unless-stopped
+    ports:
+      - "8188:8188"
+    volumes:
+      - comfyui-models:/workspace/models
+      - comfyui-outputs:/workspace/output
+      - comfyui-custom-nodes:/workspace/custom_nodes
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+    networks:
+      - ltx-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8188/system_stats"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    shm_size: '8gb'
+
+  # LTX 2.3 I2V Gradio Space
+  ltx-space:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ltx-space
+    restart: unless-stopped
+    ports:
+      - "7860:7860"
+    volumes:
+      - ./app.py:/app/app.py
+      - ./comfyui_backend.py:/app/comfyui_backend.py
+      - ./policy_checker.py:/app/policy_checker.py
+      - ltx-cache:/tmp/ltx_cache
+      - ./logs:/app/logs
+    environment:
+      - COMFYUI_SERVER=http://comfyui:8188
+      - HF_TOKEN=${HF_TOKEN}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - LOG_LEVEL=INFO
+      - ENABLE_POLICY_CHECK=true
+      - STRICT_POLICY_MODE=true
+      - MAX_GENERATIONS=-1
+      - ENABLE_RATE_LIMITING=false
+    networks:
+      - ltx-network
+    depends_on:
+      comfyui:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7860"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Redis for caching and session management
+  redis:
+    image: redis:7-alpine
+    container_name: ltx-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - ltx-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  comfyui-models:
+    driver: local
+  comfyui-outputs:
+    driver: local
+  comfyui-custom-nodes:
+    driver: local
+  ltx-cache:
+    driver: local
+  redis-data:
+    driver: local
+
+networks:
+  ltx-network:
+    driver: bridge
